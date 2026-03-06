@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+  <title>Para ti, Victoria 💝</title>
+
+  <!-- Preview cuando compartas el link en WhatsApp -->
+  <meta property="og:title" content="💝 Un mensaje especial para ti, Victoria">
+  <meta property="og:description" content="Alguien cruzó 7,242 km en código solo para decirte algo...">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#0a0a0f">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Dancing+Script:wght@600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{background:#0a0a0f;color:#fff;font-family:'Poppins',sans-serif;overflow-x:hidden}
+
+    /* ========== TERMINAL ========== */
+    #terminal{
+      position:fixed;inset:0;background:#0d1117;z-index:1000;
+      padding:20px;display:flex;flex-direction:column;
+      transition:opacity 1.5s ease,transform 1.5s ease;
+    }
+    #terminal.hide{opacity:0;transform:scale(1.05);pointer-events:none}
+    .t-bar{display:flex;gap:8px;align-items:center;padding-bottom:12px;
+      border-bottom:1px solid #21262d;margin-bottom:16px}
+    .t-dot{width:12px;height:12px;border-radius:50%}
+    .t-red{background:#ff5f57}.t-yel{background:#febc2e}.t-grn{background:#28c840}
+    .t-title{font-family:'Fira Code',monospace;font-size:12px;color:#8b949e;margin-left:8px}
+    #t-lines{font-family:'Fira Code',monospace;font-size:13px;line-height:2.1;
+      flex:1;overflow-y:auto;word-break:break-word}
+    .t-line{opacity:0;animation:lineIn .4s ease forwards}
+    @keyframes lineIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
+    .tg{color:#7ee787}.tb{color:#79c0ff}.tp{color:#ff7b93}
+    .ty{color:#8b949e}.tw{color:#e6edf3}.to{color:#ffa657}.tyl{color:#e3b341}
+    .cursor-bl{display:inline-block;width:8px;height:15px;background:#7ee787;
+      animation:cBl 1s step-end infinite;vertical-align:middle;margin-left:2px}
+    @keyframes cBl{50%{opacity:0}}
+
+    /* ========== CANVAS ========== */
+    #stars{position:fixed;inset:0;z-index:1}
+
+    /* ========== MAIN ========== */
+    #main{display:none;min-height:100vh;position:relative}
+    #main.show{display:block}
+    .content{position:relative;z-index:2;max-width:660px;margin:0 auto;padding:40px 18px 60px}
+
+    /* fade-in items */
+    .fi{opacity:0;transform:translateY(28px);transition:all .8s cubic-bezier(.23,1,.32,1)}
+    .fi.v{opacity:1;transform:translateY(0)}
+
+    /* Greeting */
+    .greet{text-align:center;margin-bottom:38px}
+    .greet h1{font-family:'Dancing Script',cursive;font-size:2.8rem;
+      background:linear-gradient(135deg,#ff6b8a,#c084fc,#ff8e53,#ff6b8a);
+      background-size:400% 400%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+      animation:gSh 5s ease infinite}
+    @keyframes gSh{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+    .greet .sub{color:#6c6c80;font-size:.85rem;font-weight:300;margin-top:6px}
+    .greet .sub span{font-family:'Fira Code',monospace;font-size:.78rem;color:#7ee787}
+
+    /* Cards */
+    .card{background:rgba(255,255,255,.03);border:1px solid rgba(255,107,138,.15);
+      border-radius:16px;padding:26px;margin-bottom:24px;backdrop-filter:blur(10px)}
+
+    /* Distance */
+    .dv{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:4px}
+    .loc{text-align:center;flex:1;min-width:80px}
+    .loc-i{font-size:2rem}.loc-n{font-size:.82rem;font-weight:600;color:#ff6b8a}
+    .loc-s{font-size:.7rem;color:#6c6c80}
+    .conn{flex:1.5;height:2px;position:relative;margin:0 4px;
+      background:linear-gradient(90deg,#ff6b8a,transparent 50%,#c084fc)}
+    .conn::before{content:'💌';position:absolute;top:-14px;animation:fly 3.5s ease-in-out infinite}
+    @keyframes fly{0%{left:0}50%{left:calc(100% - 20px)}100%{left:0}}
+    .dn{text-align:center;font-family:'Fira Code',monospace;font-size:2.2rem;font-weight:700;
+      background:linear-gradient(135deg,#ff6b8a,#c084fc);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .dl{text-align:center;font-size:.78rem;color:#6c6c80;margin-top:3px}
+    .dq{text-align:center;font-style:italic;color:#a0a0b0;font-size:.85rem;
+      margin-top:15px;padding-top:15px;border-top:1px solid rgba(255,255,255,.05)}
+
+    /* Clocks */
+    .clocks{display:flex;gap:12px;margin-bottom:24px}
+    .clk{flex:1;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);
+      border-radius:12px;padding:18px 8px;text-align:center}
+    .clk-e{font-size:1.5rem;margin-bottom:6px}
+    .clk-c{font-size:.73rem;color:#ff6b8a;font-weight:600}
+    .clk-t{font-family:'Fira Code',monospace;font-size:1.35rem;font-weight:600;
+      color:#e0e0f0;margin:4px 0}
+    .clk-d{font-size:.65rem;color:#6c6c80}
+    .clk-u{font-size:.6rem;color:#c084fc;font-family:'Fira Code',monospace;margin-top:2px}
+
+    /* Code block */
+    .cbl{background:#1a1b26;border-radius:12px;overflow:hidden;
+      border:1px solid rgba(255,255,255,.08);margin-bottom:24px}
+    .cb-bar{background:#16161e;padding:8px 14px;display:flex;align-items:center;gap:6px;
+      border-bottom:1px solid rgba(255,255,255,.06)}
+    .cb-d{width:9px;height:9px;border-radius:50%}
+    .cb-n{font-family:'Fira Code',monospace;font-size:11px;color:#565f89;margin-left:8px}
+    .cb-b{padding:18px;font-family:'Fira Code',monospace;font-size:12.5px;
+      line-height:1.9;overflow-x:auto;color:#a9b1d6}
+    /* Syntax colors */
+    .kw{color:#bb9af7}.cn{color:#ff9e64}.fn{color:#7aa2f7}
+    .st{color:#9ece6a}.cm{color:#565f89;font-style:italic}
+    .nm{color:#ff9e64}.pr{color:#73daca}.op{color:#89ddff}
+    .th{color:#f7768e}.br{color:#c0caf5}
+
+    /* Message */
+    .msg{background:linear-gradient(135deg,rgba(255,107,138,.07),rgba(192,132,252,.07));
+      border:1px solid rgba(255,107,138,.2)}
+    .msg-t{font-size:.95rem;line-height:2;color:#c8c8d8;text-align:center}
+    .msg-t .hl{color:#ff6b8a;font-weight:600}
+    .msg-t .h2{color:#c084fc;font-weight:600}
+    .msg-t .gc{font-family:'Fira Code',monospace;font-size:.78rem;color:#9ece6a;
+      display:inline-block;margin-top:6px}
+
+    /* Signature */
+    .sig{text-align:center;padding:35px 0 20px}
+    .sig .hrt{font-size:3rem;display:inline-block;animation:hb 1.3s ease infinite}
+    @keyframes hb{0%,100%{transform:scale(1)}14%{transform:scale(1.22)}
+      28%{transform:scale(1)}42%{transform:scale(1.15)}56%{transform:scale(1)}}
+    .sig .nm{font-family:'Dancing Script',cursive;font-size:2rem;color:#ff6b8a;margin-top:8px}
+    .sig .tg{font-family:'Fira Code',monospace;font-size:.7rem;color:#565f89;
+      margin-top:8px;line-height:1.8}
+
+    /* Floating hearts */
+    .fh{position:fixed;z-index:5;pointer-events:none;animation:fUp linear forwards}
+    @keyframes fUp{0%{opacity:.9;transform:translateY(0) scale(1) rotate(0deg)}
+      100%{opacity:0;transform:translateY(-100vh) scale(.3) rotate(360deg)}}
+
+    /* Responsive */
+    @media(max-width:500px){
+      .greet h1{font-size:2.1rem}
+      .dn{font-size:1.5rem}
+      .cb-b{font-size:11px;padding:14px}
+      #t-lines{font-size:11px;line-height:1.9}
+      .clk-t{font-size:1.1rem}
+      .msg-t{font-size:.88rem}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== TERMINAL INTRO ===== -->
+  <div id="terminal">
+    <div class="t-bar">
+      <div class="t-dot t-red"></div>
+      <div class="t-dot t-yel"></div>
+      <div class="t-dot t-grn"></div>
+      <span class="t-title">luis@corazon ~ </span>
+    </div>
+    <div id="t-lines"></div>
+  </div>
+
+  <!-- ===== STARRY SKY ===== -->
+  <canvas id="stars"></canvas>
+
+  <!-- ===== MAIN SCENE ===== -->
+  <div id="main">
+    <div class="content">
+
+      <!-- Greeting -->
+      <div class="greet fi">
+        <h1>Para ti, Victoria ✨</h1>
+        <p class="sub"><span>// ejecutado con el corazón ❤️</span></p>
+      </div>
+
+      <!-- Distance -->
+      <div class="card fi">
+        <div class="dv">
+          <div class="loc">
+            <div class="loc-i">🏝️</div>
+            <div class="loc-n">Isla de Margarita</div>
+            <div class="loc-s">Venezuela 🇻🇪</div>
+          </div>
+          <div class="conn"></div>
+          <div class="loc">
+            <div class="loc-i">🏰</div>
+            <div class="loc-n">Madrid</div>
+            <div class="loc-s">España 🇪🇸</div>
+          </div>
+        </div>
+        <div class="dn">7,242 km</div>
+        <div class="dl">de distancia física</div>
+        <div class="dq">"La distancia es solo una prueba<br>de lo lejos que puede viajar un sentimiento"</div>
+      </div>
+
+      <!-- Clocks -->
+      <div class="clocks fi">
+        <div class="clk">
+          <div class="clk-e">🌅</div>
+          <div class="clk-c">Isla de Margarita</div>
+          <div class="clk-t" id="tVE">--:--:--</div>
+          <div class="clk-d" id="dVE">...</div>
+          <div class="clk-u">UTC-4</div>
+        </div>
+        <div class="clk">
+          <div class="clk-e">🌇</div>
+          <div class="clk-c">Madrid</div>
+          <div class="clk-t" id="tES">--:--:--</div>
+          <div class="clk-d" id="dES">...</div>
+          <div class="clk-u">UTC+1/+2</div>
+        </div>
+      </div>
+
+      <!-- Code -->
+      <div class="cbl fi">
+        <div class="cb-bar">
+          <div class="cb-d t-red"></div>
+          <div class="cb-d t-yel"></div>
+          <div class="cb-d t-grn"></div>
+          <span class="cb-n">💝 pensandoEnTi.js</span>
+        </div>
+        <div class="cb-b" id="codeB"></div>
+      </div>
+
+      <!-- Message -->
+      <div class="card msg fi">
+        <div class="msg-t">
+          Hay <span class="hl">7,242 kilómetros</span> entre tu sonrisa y la mía,<br>
+          hay <span class="h2">5 horas</span> de diferencia en nuestros relojes,<br>
+          hay un <span class="hl">océano entero</span> de por medio...<br><br>
+          Pero no hay <span class="h2">distancia</span>, ni <span class="h2">huso horario</span>,<br>
+          ni <span class="hl">océano</span> lo suficientemente grande<br>
+          como para sacarte de <span class="hl">mis pensamientos</span>.<br><br>
+          En algún momento de cada día,<br>
+          sin importar la hora que sea allá en Madrid,<br>
+          <span class="hl">pienso en ti, Victoria</span>. 💫<br><br>
+          Y si pudiera hacer un <span class="h2">commit</span> de lo que siento,<br>
+          el mensaje sería:<br>
+          <span class="gc">"feat: added Victoria to my heart — no rollback possible"</span>
+        </div>
+      </div>
+
+      <!-- Signature -->
+      <div class="sig fi">
+        <div class="hrt">💝</div>
+        <div class="nm">Luis Miguel</div>
+        <div class="tg">
+          &lt;/desde Isla de Margarita, con amor&gt;<br>
+          git push origin sentimientos --force 🚀
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+  /* ======================================================
+     TERMINAL INTRO
+  ====================================================== */
+  const lines = [
+    { t: '<span class="tg">❯</span> <span class="tw">node</span> <span class="tb">loveLetter.js</span>', d: 600 },
+    { t: '&nbsp;', d: 250 },
+    { t: '<span class="ty">📦 Inicializando módulo de sentimientos...</span> <span class="tg">✓</span>', d: 500 },
+    { t: '<span class="ty">📥 import</span> <span class="tb">{ amor, pensamientos }</span> <span class="ty">from</span> <span class="tp">\'./corazón\'</span> <span class="tg">✓</span>', d: 600 },
+    { t: '<span class="ty">🔗 Conectando:</span> <span class="to">Isla de Margarita 🇻🇪</span> <span class="ty">→</span> <span class="to">Madrid 🇪🇸</span> <span class="tg">✓</span>', d: 700 },
+    { t: '<span class="ty">📡 Distancia calculada:</span> <span class="tyl">7,242 km</span>', d: 550 },
+    { t: '<span class="ty">🧠 Cargando pensamientos sobre</span> <span class="tp">Victoria</span><span class="ty">...</span>', d: 500 },
+    { t: '<span class="ty">   [████████████████████████] 100%</span> <span class="tg">✓</span>', d: 700 },
+    { t: '<span class="ty">❓ ¿Dejar de pensar en ella?</span> <span class="tp">❌ Error: Operación imposible</span>', d: 700 },
+    { t: '<span class="ty">💝 Compilando sentimientos...</span> <span class="tg">Build successful ✓</span>', d: 600 },
+    { t: '&nbsp;', d: 250 },
+    { t: '<span class="tg">❯</span> <span class="tw">Ejecutando</span> <span class="tp">sorpresa.exe</span> <span class="tp">💝</span>', d: 900 }
+  ];
+
+  const tBox = document.getElementById('t-lines');
+  let accum = 0;
+
+  function runTerminal() {
+    lines.forEach((l, i) => {
+      accum += l.d;
+      setTimeout(() => {
+        const d = document.createElement('div');
+        d.className = 't-line';
+        d.innerHTML = l.t + (i === lines.length - 1 ? ' <span class="cursor-bl"></span>' : '');
+        tBox.appendChild(d);
+        tBox.scrollTop = tBox.scrollHeight;
+      }, accum);
+    });
+
+    setTimeout(() => {
+      document.getElementById('terminal').classList.add('hide');
+      setTimeout(() => {
+        document.getElementById('terminal').style.display = 'none';
+        launchMain();
+      }, 1600);
+    }, accum + 1300);
+  }
+
+  /* ======================================================
+     STARRY SKY CANVAS
+  ====================================================== */
+  const cv = document.getElementById('stars');
+  const cx = cv.getContext('2d');
+  let pts = [], shs = [];
+
+  function initStars() {
+    cv.width = innerWidth; cv.height = innerHeight;
+    pts = [];
+    for (let i = 0; i < 180; i++) {
+      pts.push({
+        x: Math.random() * cv.width,
+        y: Math.random() * cv.height,
+        r: Math.random() * 1.4 + .3,
+        a: Math.random(),
+        da: (Math.random() - .5) * .018,
+        c: ['#fff','#ffd4e0','#d4c5ff','#c5e8ff'][~~(Math.random()*4)]
+      });
+    }
+    drawStars();
+  }
+
+  function drawStars() {
+    cx.clearRect(0, 0, cv.width, cv.height);
+
+    pts.forEach(s => {
+      s.a += s.da;
+      if (s.a > 1 || s.a < .1) s.da *= -1;
+      cx.beginPath();
+      cx.arc(s.x, s.y, s.r, 0, 6.283);
+      cx.fillStyle = s.c;
+      cx.globalAlpha = s.a;
+      cx.fill();
+    });
+
+    if (Math.random() < .007) {
+      shs.push({
+        x: Math.random() * cv.width * .8,
+        y: Math.random() * cv.height * .4,
+        l: Math.random() * 60 + 30,
+        sp: Math.random() * 5 + 4,
+        li: 1
+      });
+    }
+
+    for (let i = shs.length - 1; i >= 0; i--) {
+      const s = shs[i];
+      s.x += s.sp; s.y += s.sp * .6; s.li -= .015;
+      cx.beginPath();
+      cx.moveTo(s.x, s.y);
+      cx.lineTo(s.x - s.l, s.y - s.l * .6);
+      cx.strokeStyle = `rgba(255,200,220,${s.li})`;
+      cx.lineWidth = 1.5;
+      cx.globalAlpha = s.li;
+      cx.stroke();
+      if (s.li <= 0) shs.splice(i, 1);
+    }
+
+    cx.globalAlpha = 1;
+    requestAnimationFrame(drawStars);
+  }
+
+  addEventListener('resize', () => { cv.width = innerWidth; cv.height = innerHeight; });
+
+  /* ======================================================
+     CODE BLOCK (syntax highlighted)
+  ====================================================== */
+  function insertCode() {
+    document.getElementById('codeB').innerHTML =
+`<span class="kw">class</span> <span class="cn">MisPensamientos</span> <span class="br">{</span>
+  <span class="fn">constructor</span><span class="br">()</span> <span class="br">{</span>
+    <span class="th">this</span>.<span class="pr">de</span>          <span class="op">=</span> <span class="st">"Luis Miguel"</span>;
+    <span class="th">this</span>.<span class="pr">para</span>        <span class="op">=</span> <span class="st">"Victoria González"</span>;
+    <span class="th">this</span>.<span class="pr">desde</span>       <span class="op">=</span> <span class="st">"Isla de Margarita 🏝️"</span>;
+    <span class="th">this</span>.<span class="pr">hasta</span>       <span class="op">=</span> <span class="st">"Madrid 🇪🇸"</span>;
+    <span class="th">this</span>.<span class="pr">distancia</span>   <span class="op">=</span> <span class="nm">7242</span>;  <span class="cm">// km</span>
+    <span class="th">this</span>.<span class="pr">sentimiento</span> <span class="op">=</span> <span class="nm">Infinity</span>;
+  <span class="br">}</span>
+
+  <span class="fn">miDíaADía</span><span class="br">()</span> <span class="br">{</span>
+    <span class="kw">const</span> <span class="pr">pensar</span> <span class="op">=</span> <span class="kw">new</span> <span class="cn">Map</span>();
+    <span class="kw">for</span> (<span class="kw">let</span> <span class="pr">h</span> <span class="op">=</span> <span class="nm">0</span>; <span class="pr">h</span> <span class="op">&lt;</span> <span class="nm">24</span>; <span class="pr">h</span><span class="op">++</span>)
+      <span class="pr">pensar</span>.<span class="fn">set</span>(<span class="pr">h</span>, <span class="st">"Victoria"</span>);
+    <span class="cm">// Las 24 horas pensando en ti ❤️</span>
+    <span class="kw">return</span> <span class="pr">pensar</span>;
+  <span class="br">}</span>
+
+  <span class="fn">laDistanciaImporta</span><span class="br">()</span> <span class="br">{</span>
+    <span class="cm">// 7,242 km separan nuestras coordenadas</span>
+    <span class="cm">// pero ningún océano es más grande</span>
+    <span class="cm">// que lo que siento por ti</span>
+    <span class="kw">return</span> <span class="nm">false</span>; <span class="cm">// nunca importa 💝</span>
+  <span class="br">}</span>
+
+  <span class="kw">async</span> <span class="fn">olvidarte</span><span class="br">()</span> <span class="br">{</span>
+    <span class="kw">throw new</span> <span class="cn">Error</span>(<span class="st">"Imposible. Función no permitida."</span>);
+  <span class="br">}</span>
+<span class="br">}</span>
+
+<span class="kw">const</span> <span class="pr">yo</span> <span class="op">=</span> <span class="kw">new</span> <span class="cn">MisPensamientos</span>();
+<span class="pr">yo</span>.<span class="fn">miDíaADía</span>();          <span class="cm">// → Map(24) { todas: "Victoria" }</span>
+<span class="pr">yo</span>.<span class="fn">laDistanciaImporta</span>(); <span class="cm">// → false 🌍💕</span>
+<span class="pr">yo</span>.<span class="fn">olvidarte</span>();          <span class="cm">// ❌ Error: Imposible</span>`;
+  }
+
+  /* ======================================================
+     REAL-TIME CLOCKS
+  ====================================================== */
+  function updateClocks() {
+    const now = new Date();
+    const optT = { hour:'2-digit', minute:'2-digit', second:'2-digit', hour12: false };
+    const optD = { weekday:'short', day:'numeric', month:'short', year:'numeric' };
+
+    const ve = new Date(now.toLocaleString('en-US',{timeZone:'America/Caracas'}));
+    document.getElementById('tVE').textContent = ve.toLocaleTimeString('es-VE', optT);
+    document.getElementById('dVE').textContent = ve.toLocaleDateString('es-VE', optD);
+
+    const es = new Date(now.toLocaleString('en-US',{timeZone:'Europe/Madrid'}));
+    document.getElementById('tES').textContent = es.toLocaleTimeString('es-ES', optT);
+    document.getElementById('dES').textContent = es.toLocaleDateString('es-ES', optD);
+  }
+
+  /* ======================================================
+     FLOATING HEARTS (auto + on tap)
+  ====================================================== */
+  const hts = ['💗','💕','💝','✨','💖','💓','🦋'];
+
+  function spawnHeart(x, bottom, size, dur) {
+    const h = document.createElement('div');
+    h.className = 'fh';
+    h.textContent = hts[~~(Math.random()*hts.length)];
+    h.style.left = x;
+    h.style.bottom = bottom;
+    h.style.fontSize = size;
+    h.style.animationDuration = dur;
+    document.body.appendChild(h);
+    setTimeout(() => h.remove(), parseFloat(dur) * 1000 + 500);
+  }
+
+  function autoHeart() {
+    spawnHeart(
+      Math.random()*100+'vw', '-20px',
+      (Math.random()*1.2+.8)+'rem',
+      (Math.random()*3+3)+'s'
+    );
+  }
+
+  document.addEventListener('click', e => {
+    for(let i=0;i<6;i++){
+      setTimeout(()=>{
+        spawnHeart(
+          (e.clientX + (Math.random()-.5)*80)+'px',
+          (innerHeight - e.clientY + (Math.random()-.5)*40)+'px',
+          (Math.random()*.8+.6)+'rem',
+          (Math.random()*1.5+2)+'s'
+        );
+      }, i*80);
+    }
+  });
+
+  /* ======================================================
+     FADE-IN ELEMENTS
+  ====================================================== */
+  function revealItems() {
+    const items = document.querySelectorAll('.fi');
+    let delay = 0;
+    items.forEach(el => {
+      setTimeout(()=> el.classList.add('v'), delay);
+      delay += 450;
+    });
+  }
+
+  /* ======================================================
+     LAUNCH MAIN SCENE
+  ====================================================== */
+  function launchMain() {
+    document.getElementById('main').classList.add('show');
+    insertCode();
+    revealItems();
+    updateClocks();
+    setInterval(updateClocks, 1000);
+    setInterval(autoHeart, 2200);
+  }
+
+  /* ======================================================
+     INIT
+  ====================================================== */
+  addEventListener('load', () => {
+    initStars();
+    setTimeout(runTerminal, 500);
+  });
+  </script>
+</body>
+</html>
